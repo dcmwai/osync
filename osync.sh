@@ -53,7 +53,7 @@ OSYNC_DIR=".osync_workdir"
 KEEP_LOGGING=1801
 
 ## Correct output of sort command (language agnostic sorting)
-export LC_ALL=C
+export LC_ALL=en_US.UTF8
 
 ALERT_LOG_FILE=$RUN_DIR/osync_lastlog
 
@@ -1856,8 +1856,24 @@ function Init
         fi
 
 	## Set rsync default arguments
-	RSYNC_ARGS="-rlptgoD"
+        RSYNC_ARGS="-rltgD"
 
+        if [ "$NO_OWNER" == "yes" ]
+        then
+                RSYNC_ARGS=$RSYNC_ARGS" --no-owner"
+        else
+                RSYNC_ARGS=$RSYNC_ARGS" -o"
+        fi
+        if [ "$NO_PERMS" == "yes" ]
+        then
+                RSYNC_ARGS=$RSYNC_ARGS" --no-perms"
+        else
+                RSYNC_ARGS=$RSYNC_ARGS" -p"
+        fi
+        if [ "$NO_DIRTIME" == "yes" ]
+        then
+                RSYNC_ARGS=$RSYNC_ARGS"  --omit-dir-times"
+        fi
         if [ "$PRESERVE_ACL" == "yes" ]
         then
                 RSYNC_ARGS=$RSYNC_ARGS" -A"
